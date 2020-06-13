@@ -1,5 +1,7 @@
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Scanner;
 
@@ -37,15 +39,19 @@ public class Main {
 			for (File subSubFile : subFile.listFiles()) {
 				if (subSubFile.getName().contains(".osu")) {
 					String content = "";
-					try {
-						Scanner reader = new Scanner(subSubFile);
-						while (reader.hasNextLine()) {
-							String data = reader.nextLine();
-							content = content + data;
+					String line;
+					try
+					{      
+						BufferedReader in = new BufferedReader( new FileReader(subSubFile));
+						while ((line = in.readLine()) != null)
+						{
+							content = content + line + "\n";
 						}
-						reader.close();
-					} catch (FileNotFoundException e) {
-						System.out.println("Error");
+						in.close();
+					}
+					catch ( IOException iox )
+					{
+						System.out.println("Problem reading " + songs);
 					}
 					if (content.contains("Mode: 3") && content.contains("CircleSize:" + keys))
 						subSubFile.delete();
