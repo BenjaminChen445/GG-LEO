@@ -18,8 +18,9 @@ public class Main {
 		System.out.println("Input your osu songs folder directory");
 		String input = scanner.nextLine();
 		getDirectory(input);
-		System.out.println("Input a natural number");
+		System.out.println("Input the type of mania map you want to delete (number of keys)");
 		keys = scanner.nextInt();
+		System.out.println("Deleting... This may take a while if you have lots of maps");
 		delete();
 		System.out.println("Time taken: " + duration + " seconds");
 		
@@ -37,6 +38,31 @@ public class Main {
 		long startTime = System.currentTimeMillis();
 		for (File subFile : songs.listFiles())
 			for (File subSubFile : subFile.listFiles()) {
+				
+				if (subSubFile.listFiles()!= null) {
+					for (File subSubSubFile : subSubFile.listFiles()) {
+						if (subSubSubFile.getName().contains(".osu")) {
+							String content = "";
+							String line;
+							try
+							{      
+								BufferedReader in = new BufferedReader( new FileReader(subSubSubFile));
+								while ((line = in.readLine()) != null)
+								{
+									content = content + line + "\n";
+								}
+								in.close();
+							}
+							catch ( IOException iox )
+							{
+								System.out.println("Problem reading " + songs);
+							}
+							if (content.contains("Mode: 3") && content.contains("CircleSize:" + keys))
+								subSubSubFile.delete();
+						}
+					}
+				}
+						
 				if (subSubFile.getName().contains(".osu")) {
 					String content = "";
 					String line;
@@ -61,19 +87,38 @@ public class Main {
 		for (File subFile : songs.listFiles()) {
 			int count = 0;
 			
-			for (File subSubFile : subFile.listFiles())
+			for (File subSubFile : subFile.listFiles()) {
+				
+				if (subSubFile.listFiles() != null) {
+					
+					for (File subSubSubFile : subSubFile.listFiles()) {
+						if (subSubSubFile.getName().contains(".osu"))
+							count++;
+					}
+					
+				}
+				
 				if (subSubFile.getName().contains(".osu"))
 					count++;
+			}
 			
-			if (count == 0)
-				for (File subSubFile : subFile.listFiles())
+			if (count == 0) {
+				for (File subSubFile : subFile.listFiles()) {
+					if (subSubFile.listFiles() != null) {
+						for (File subSubSubFile : subSubFile.listFiles()) {
+							subSubSubFile.delete();
+						}
+					}
 					subSubFile.delete();
+				}
+			}
+					
 			
 			subFile.delete();
 		}
 		
 		long endTime = System.currentTimeMillis();
-		duration = (endTime - startTime) / 1000;
+		duration = (endTime - startTime) / 1000l;
 	}
 
 }
