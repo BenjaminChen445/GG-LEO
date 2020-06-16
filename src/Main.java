@@ -25,13 +25,13 @@ public class Main {
 		String input = scanner.nextLine();
 		getDirectory(input);
 		/*System.out.println("Input the type of mania map you want to delete (number of keys)");
-		keys = scanner.nextInt();
-		System.out.println("Deleting... This may take a while if you have lots of maps");*/
+		keys = scanner.nextInt();*/
 
 		//delete();
 		//getDirectories();
 		System.out.println("What beatmaps under which star would you like to delete. Try inputting a value at least 0.5 stars from what you would actually like. The algorithm for calculating the difficulty is outdated");
 		star = scanner.nextDouble();
+		System.out.println("Deleting... This may take a while if you have lots of maps");
 		deleteSongs();
 		//cleanUp();
 		System.out.println("Time taken: " + duration + " seconds");
