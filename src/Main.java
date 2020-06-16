@@ -141,7 +141,7 @@ public class Main {
 
 				if (subSubFile.listFiles()!= null) {
 					for (File subSubSubFile : subSubFile.listFiles()) {
-						if (subSubSubFile.getName().contains(".osudifficulty")) {
+						if (subSubSubFile.getName().contains("difficulty")) {
 							String content = "";
 							String line;
 							try
@@ -158,14 +158,14 @@ public class Main {
 								System.out.println("Problem reading " + songs);
 							}
 							if (Double.parseDouble(content) <= star) {
-								new File(subSubSubFile.getPath().substring(0, subSubSubFile.getPath().indexOf(".osu") + 4)).delete();
+								new File(subSubSubFile.getPath().replace("difficulty.txt", "") + ".osu").delete();
 								subSubSubFile.delete();
 							}
 						}
 					}
 				}
 
-				if (subSubFile.getName().contains(".osudifficulty")) {
+				if (subSubFile.getName().contains("difficulty.txt")) {
 					String content = "";
 					String line;
 					try
@@ -183,7 +183,7 @@ public class Main {
 					}
 					if (Double.parseDouble(content) <= star)
 					{
-						new File(subSubFile.getPath().substring(0, subSubFile.getPath().indexOf(".osu") + 4)).delete();
+						new File(subSubFile.getPath().replace("difficulty.txt", "") + ".osu").delete();
 						subSubFile.delete();
 					}
 				}
@@ -254,11 +254,11 @@ public class Main {
 							}
 							if (content.contains("Mode: 0")) {
 								OsuBeatmap beatmap = parser.parse(subSubSubFile, OsuBeatmap.class);
-								writeFile(beatmap.getDifficulty().getStars() + "", subSubSubFile.getPath() + subSubSubFile.getName() + "difficulty.txt");
+								writeFile(beatmap.getDifficulty().getStars() + "", subSubSubFile.getPath().replace(".osu", "") + "difficulty.txt");
 							}
 							if (content.contains("Mode: 3")) {
 								ManiaBeatmap beatmap = parser.parse(subSubSubFile, ManiaBeatmap.class);
-								writeFile(beatmap.getDifficulty().getStars() + "", subSubSubFile.getPath() + subSubSubFile.getName() + "difficulty.txt");
+								writeFile(beatmap.getDifficulty().getStars() + "", subSubSubFile.getPath().replace(".osu", "") + "difficulty.txt");
 							}
 						}
 
@@ -280,11 +280,11 @@ public class Main {
 					}
 					if (content.contains("Mode: 0")) {
 						OsuBeatmap beatmap = parser.parse(subSubFile, OsuBeatmap.class);
-						writeFile(beatmap.getDifficulty().getStars() + "", subSubFile.getPath() + subSubFile.getName() + "difficulty.txt");
+						writeFile(beatmap.getDifficulty().getStars() + "", subSubFile.getPath().replace(".osu", "") + "difficulty.txt");
 					}
 					if (content.contains("Mode: 3")) {
 						ManiaBeatmap beatmap = parser.parse(subSubFile, ManiaBeatmap.class);
-						writeFile(beatmap.getDifficulty().getStars() + "", subSubFile.getPath() + subSubFile.getName() + "difficulty.txt");
+						writeFile(beatmap.getDifficulty().getStars() + "", subSubFile.getPath().replace(".osu", "") + "difficulty.txt");
 					}
 				}
 			}
