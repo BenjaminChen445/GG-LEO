@@ -132,7 +132,7 @@ public class Main {
 		long endTime = System.currentTimeMillis();
 		duration = (endTime - startTime) / 1000l;
 	}
-	
+
 	public static void deleteSongs() throws BeatmapException, IOException {
 		long startTime = System.currentTimeMillis();
 		getDirectories();
@@ -192,9 +192,9 @@ public class Main {
 		long endTime = System.currentTimeMillis();
 		duration = (endTime - startTime) / 1000l;
 	}
-	
+
 	public static void cleanUp() {
-		
+
 		for (File subFile : songs.listFiles()) {
 			int count = 0;
 
@@ -202,29 +202,24 @@ public class Main {
 
 				if (subSubFile.listFiles() != null) {
 
+					System.out.println("hi");
 					for (File subSubSubFile : subSubFile.listFiles()) {
 						if (subSubSubFile.getPath().contains(".osu")) {
 							count++;
-							System.out.println(subSubSubFile.getPath());
 						}
+					}
+
+					if (count == 0) {
+						for (File subSubSubFile : subSubFile.listFiles()) {
+							subSubSubFile.delete();
+						}
+						subSubFile.delete();
 					}
 
 				}
 
 				else if (subSubFile.getPath().contains(".osu"))
 					count++;
-			}
-
-			if (count == 0) {
-				System.out.println("hi");
-				for (File subSubFile : subFile.listFiles()) {
-					if (subSubFile.listFiles() != null) {
-						for (File subSubSubFile : subSubFile.listFiles()) {
-							subSubSubFile.delete();
-						}
-					}
-					subSubFile.delete();
-				}
 			}
 		}
 	}
