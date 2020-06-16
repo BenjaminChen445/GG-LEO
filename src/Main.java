@@ -151,9 +151,9 @@ public class Main {
 								System.out.println("Problem reading " + songs);
 							}
 							if (content.contains("Mode: 3")) {
-								System.out.println("hi");
+								//System.out.println("hi");
 								ManiaBeatmap beatmap = parser.parse(subSubSubFile, ManiaBeatmap.class);
-								writeFile(beatmap.getDifficulty().getStars() + "", subSubFile.getPath() + subSubSubFile.getName() + "difficulty.txt");
+								writeFile(beatmap.getDifficulty().getStars() + "", subSubSubFile.getPath() + subSubSubFile.getName() + "difficulty.txt");
 							}
 						}
 
@@ -176,7 +176,7 @@ public class Main {
 					if (content.contains("Mode: 3")) {
 						//System.out.println("hi");
 						ManiaBeatmap beatmap = parser.parse(subSubFile, ManiaBeatmap.class);
-						writeFile(beatmap.getDifficulty() + "", subFile.getPath() + subSubFile.getName() + "difficulty.txt");
+						writeFile(beatmap.getDifficulty() + "", subSubFile.getPath() + subSubFile.getName() + "difficulty.txt");
 					}
 				}
 			}
