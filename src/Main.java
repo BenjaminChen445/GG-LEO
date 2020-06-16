@@ -21,7 +21,7 @@ public class Main {
 		// TODO Auto-generated method stub
 		InputStream stream = System.in;
 		Scanner scanner = new Scanner(stream);
-		System.out.println("Input your osu songs folder directory");
+		System.out.println("Input your osu folder directory");
 		String input = scanner.nextLine();
 		getDirectory(input);
 		/*System.out.println("Input the type of mania map you want to delete (number of keys)");
