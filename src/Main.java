@@ -202,7 +202,6 @@ public class Main {
 
 				if (subSubFile.listFiles() != null) {
 
-					System.out.println("hi");
 					for (File subSubSubFile : subSubFile.listFiles()) {
 						if (subSubSubFile.getPath().contains(".osu")) {
 							count++;
@@ -217,9 +216,11 @@ public class Main {
 					}
 
 				}
+				
+				count = 0;
 
-				else if (subSubFile.getPath().contains(".osu"))
-					count++;
+				//else if (subSubFile.getPath().contains(".osu"))
+					//count++;
 			}
 		}
 	}
