@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Scanner;
 import lt.ekgame.beatmap_analyzer.beatmap.mania.ManiaBeatmap;
+import lt.ekgame.beatmap_analyzer.beatmap.osu.OsuBeatmap;
 import lt.ekgame.beatmap_analyzer.parser.BeatmapException;
 import lt.ekgame.beatmap_analyzer.parser.BeatmapParser;
 
@@ -14,6 +15,7 @@ public class Main {
 	static File songs;
 	static int keys;
 	static long duration;
+	static double star;
 
 	public static void main(String[] args) throws BeatmapException, IOException {
 		// TODO Auto-generated method stub
@@ -27,7 +29,11 @@ public class Main {
 		System.out.println("Deleting... This may take a while if you have lots of maps");*/
 
 		//delete();
-		getDirectories();
+		//getDirectories();
+		System.out.println("What beatmaps under which star would you like to delete. Try inputting a value at least 0.5 stars from what you would actually like. The algorithm for calculating the difficulty is outdated");
+		star = scanner.nextDouble();
+		deleteSongs();
+		//cleanUp();
 		System.out.println("Time taken: " + duration + " seconds");
 
 	}
@@ -40,7 +46,7 @@ public class Main {
 		keys = num;
 	}
 
-	public static void delete() {
+	public static void deleteKeyedBeatmaps() {
 		long startTime = System.currentTimeMillis();
 		for (File subFile : songs.listFiles())
 			for (File subSubFile : subFile.listFiles()) {
@@ -126,10 +132,106 @@ public class Main {
 		long endTime = System.currentTimeMillis();
 		duration = (endTime - startTime) / 1000l;
 	}
+	
+	public static void deleteSongs() throws BeatmapException, IOException {
+		long startTime = System.currentTimeMillis();
+		getDirectories();
+		for (File subFile : songs.listFiles())
+			for (File subSubFile : subFile.listFiles()) {
+
+				if (subSubFile.listFiles()!= null) {
+					for (File subSubSubFile : subSubFile.listFiles()) {
+						if (subSubSubFile.getName().contains(".osudifficulty")) {
+							String content = "";
+							String line;
+							try
+							{      
+								BufferedReader in = new BufferedReader( new FileReader(subSubSubFile));
+								while ((line = in.readLine()) != null)
+								{
+									content = content + line + "\n";
+								}
+								in.close();
+							}
+							catch ( IOException iox )
+							{
+								System.out.println("Problem reading " + songs);
+							}
+							if (Double.parseDouble(content) <= star) {
+								new File(subSubSubFile.getPath().substring(0, subSubSubFile.getPath().indexOf(".osu") + 4)).delete();
+								subSubSubFile.delete();
+							}
+						}
+					}
+				}
+
+				if (subSubFile.getName().contains(".osudifficulty")) {
+					String content = "";
+					String line;
+					try
+					{      
+						BufferedReader in = new BufferedReader( new FileReader(subSubFile));
+						while ((line = in.readLine()) != null)
+						{
+							content = content + line + "\n";
+						}
+						in.close();
+					}
+					catch ( IOException iox )
+					{
+						System.out.println("Problem reading " + songs);
+					}
+					if (Double.parseDouble(content) <= star)
+					{
+						new File(subSubFile.getPath().substring(0, subSubFile.getPath().indexOf(".osu") + 4)).delete();
+						subSubFile.delete();
+					}
+				}
+			}
+		cleanUp();
+		long endTime = System.currentTimeMillis();
+		duration = (endTime - startTime) / 1000l;
+	}
+	
+	public static void cleanUp() {
+		
+		for (File subFile : songs.listFiles()) {
+			int count = 0;
+
+			for (File subSubFile : subFile.listFiles()) {
+
+				if (subSubFile.listFiles() != null) {
+
+					for (File subSubSubFile : subSubFile.listFiles()) {
+						if (subSubSubFile.getPath().contains(".osu")) {
+							count++;
+							System.out.println(subSubSubFile.getPath());
+						}
+					}
+
+				}
+
+				else if (subSubFile.getPath().contains(".osu"))
+					count++;
+			}
+
+			if (count == 0) {
+				System.out.println("hi");
+				for (File subSubFile : subFile.listFiles()) {
+					if (subSubFile.listFiles() != null) {
+						for (File subSubSubFile : subSubFile.listFiles()) {
+							subSubSubFile.delete();
+						}
+					}
+					subSubFile.delete();
+				}
+			}
+		}
+	}
 
 	public static void getDirectories() throws BeatmapException, IOException {
 		BeatmapParser parser = new BeatmapParser();
-		for (File subFile : songs.listFiles()) {
+		for (File subFile : songs.listFiles())
 			for (File subSubFile : subFile.listFiles()) {
 
 				if (subSubFile.listFiles()!= null)
@@ -150,8 +252,11 @@ public class Main {
 							{
 								System.out.println("Problem reading " + songs);
 							}
+							if (content.contains("Mode: 0")) {
+								OsuBeatmap beatmap = parser.parse(subSubSubFile, OsuBeatmap.class);
+								writeFile(beatmap.getDifficulty().getStars() + "", subSubSubFile.getPath() + subSubSubFile.getName() + "difficulty.txt");
+							}
 							if (content.contains("Mode: 3")) {
-								//System.out.println("hi");
 								ManiaBeatmap beatmap = parser.parse(subSubSubFile, ManiaBeatmap.class);
 								writeFile(beatmap.getDifficulty().getStars() + "", subSubSubFile.getPath() + subSubSubFile.getName() + "difficulty.txt");
 							}
@@ -173,14 +278,16 @@ public class Main {
 					{
 						System.out.println("Problem reading " + songs);
 					}
+					if (content.contains("Mode: 0")) {
+						OsuBeatmap beatmap = parser.parse(subSubFile, OsuBeatmap.class);
+						writeFile(beatmap.getDifficulty().getStars() + "", subSubFile.getPath() + subSubFile.getName() + "difficulty.txt");
+					}
 					if (content.contains("Mode: 3")) {
-						//System.out.println("hi");
 						ManiaBeatmap beatmap = parser.parse(subSubFile, ManiaBeatmap.class);
-						writeFile(beatmap.getDifficulty() + "", subSubFile.getPath() + subSubFile.getName() + "difficulty.txt");
+						writeFile(beatmap.getDifficulty().getStars() + "", subSubFile.getPath() + subSubFile.getName() + "difficulty.txt");
 					}
 				}
 			}
-		}
 	}
 
 	public static void writeFile(String data, String outputFile) throws IOException {
