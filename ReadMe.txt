@@ -7,4 +7,5 @@ How to use:
 Credits:
 -Benjamin Chen
 -Leo Feng
+-ekgame for designing the beatmap analyzer
 
